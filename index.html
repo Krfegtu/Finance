@@ -5,13 +5,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Трекер выполненных задач</title>
     
+    <link class="apple-touch-icon" rel="apple-touch-icon" href="https://cdn-icons-png.flaticon.com/512/2377/2377846.png">
     <link rel="manifest" href="./manifest.json">
     
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="ProTrack">
-    
-    <link class="apple-touch-icon" rel="apple-touch-icon" href="https://cdn-icons-png.flaticon.com/512/2377/2377846.png">
 
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -66,22 +65,16 @@
                 </div>
 
                 <div class="flex items-center space-x-1">
-                    <button onclick="exportDataJSON()" class="p-2 text-slate-400 hover:text-indigo-600 rounded-lg transition" title="Экспорт JSON">
-                        <i class="fa-solid fa-file-export text-sm"></i>
+                    <button onclick="openSettingsModal()" class="p-2 text-slate-400 hover:text-indigo-600 rounded-lg transition" title="Настройки">
+                        <i class="fa-solid fa-gear text-sm"></i>
                     </button>
-                    <div class="relative inline-block">
-                        <input type="file" id="import-file-input" onchange="importDataJSON(event)" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer">
-                        <button class="p-2 text-slate-400 hover:text-indigo-600 rounded-lg transition" title="Импорт JSON">
-                            <i class="fa-solid fa-file-import text-sm"></i>
-                        </button>
-                    </div>
                 </div>
             </div>
 
             <div id="global-filters" class="flex flex-col gap-2 bg-slate-50 p-2 rounded-xl border border-slate-100">
                 <div class="flex items-center justify-between">
                     <select id="period-month-select" onchange="handlePeriodChange()" class="bg-transparent font-semibold text-xs text-slate-700 focus:outline-none cursor-pointer">
-                        </select>
+                    </select>
                     <button onclick="resetToCurrentMonth()" class="text-[10px] text-indigo-600 font-medium hover:underline">Текущий месяц</button>
                 </div>
                 <div class="flex items-center space-x-1 text-[10px] font-medium text-slate-500 justify-between">
@@ -144,6 +137,8 @@
                                 <circle id="chart-exp-3" cx="18" cy="18" r="15.915" fill="transparent" stroke="#3b82f6" stroke-width="4" stroke-dasharray="0 100"></circle>
                                 <circle id="chart-exp-4" cx="18" cy="18" r="15.915" fill="transparent" stroke="#ec4899" stroke-width="4" stroke-dasharray="0 100"></circle>
                                 <circle id="chart-exp-5" cx="18" cy="18" r="15.915" fill="transparent" stroke="#6366f1" stroke-width="4" stroke-dasharray="0 100"></circle>
+                                <circle id="chart-exp-6" cx="18" cy="18" r="15.915" fill="transparent" stroke="#14b8a6" stroke-width="4" stroke-dasharray="0 100"></circle>
+                                <circle id="chart-exp-7" cx="18" cy="18" r="15.915" fill="transparent" stroke="#64748b" stroke-width="4" stroke-dasharray="0 100"></circle>
                             </svg>
                             <span class="absolute text-[11px] font-bold text-slate-700" id="dash-exp-sum">0</span>
                         </div>
@@ -153,6 +148,8 @@
                             <div class="flex items-center justify-between"><span><span class="text-blue-500 mr-0.5">●</span> ✂️ Расходн.</span><span id="lbl-exp-3">0%</span></div>
                             <div class="flex items-center justify-between"><span><span class="text-pink-500 mr-0.5">●</span> 🎓 Курсы</span><span id="lbl-exp-4">0%</span></div>
                             <div class="flex items-center justify-between"><span><span class="text-indigo-500 mr-0.5">●</span> 🛍️ Шопинг</span><span id="lbl-exp-5">0%</span></div>
+                            <div class="flex items-center justify-between"><span><span class="text-teal-500 mr-0.5">●</span> ☕ Кофейня</span><span id="lbl-exp-6">0%</span></div>
+                            <div class="flex items-center justify-between"><span><span class="text-slate-500 mr-0.5">●</span> 🌀 Другое</span><span id="lbl-exp-7">0%</span></div>
                         </div>
                     </div>
                 </div>
@@ -168,7 +165,7 @@
                     <button onclick="switchView('expenses')" class="p-4 bg-rose-600 hover:bg-rose-700 text-white rounded-xl shadow-lg shadow-rose-600/10 transition text-left flex justify-between items-center group">
                         <div>
                             <span class="font-bold text-sm block">Раздел Расходы 💸</span>
-                            <span class="text-[10px] text-rose-100">Заправка, продукты, расходники</span>
+                            <span class="text-[10px] text-rose-100">Анализ трат по всем категориям</span>
                         </div>
                         <i class="fa-solid fa-chevron-right text-xs transform group-hover:translate-x-1 transition"></i>
                     </button>
@@ -194,8 +191,7 @@
                         </div>
                     </div>
 
-                    <div id="incomes-list-container" class="flex-1 p-3 divide-y divide-slate-100 space-y-2 overflow-y-auto max-h-[300px]">
-                        </div>
+                    <div id="incomes-list-container" class="flex-1 p-3 divide-y divide-slate-100 space-y-2 overflow-y-auto max-h-[300px]"></div>
 
                     <button onclick="openEntryModal('income')" class="absolute bottom-4 right-4 w-12 h-12 bg-emerald-500 hover:bg-emerald-600 text-white rounded-full flex items-center justify-center shadow-lg shadow-emerald-500/30 transition transform active:scale-95 z-20">
                         <i class="fa-solid fa-plus text-lg"></i>
@@ -233,8 +229,7 @@
                         </div>
                     </div>
 
-                    <div id="expenses-list-container" class="flex-1 p-3 divide-y divide-slate-100 space-y-2 overflow-y-auto max-h-[300px]">
-                        </div>
+                    <div id="expenses-list-container" class="flex-1 p-3 divide-y divide-slate-100 space-y-2 overflow-y-auto max-h-[300px]"></div>
 
                     <button onclick="openEntryModal('expense')" class="absolute bottom-4 right-4 w-12 h-12 bg-rose-500 hover:bg-rose-600 text-white rounded-full flex items-center justify-center shadow-lg shadow-rose-500/30 transition transform active:scale-95 z-20">
                         <i class="fa-solid fa-plus text-lg"></i>
@@ -252,6 +247,8 @@
                         <div>✂️ Расходники: <span class="font-bold text-white" id="exp-footer-tools">0 ₽</span></div>
                         <div>🎓 Курсы: <span class="font-bold text-white" id="exp-footer-courses">0 ₽</span></div>
                         <div>🛍️ Шопинг: <span class="font-bold text-white" id="exp-footer-shop">0 ₽</span></div>
+                        <div>☕ Кофейня: <span class="font-bold text-white" id="exp-footer-coffee">0 ₽</span></div>
+                        <div>🌀 Другое: <span class="font-bold text-white" id="exp-footer-other">0 ₽</span></div>
                     </div>
                 </div>
             </section>
@@ -293,6 +290,12 @@
                         <button onclick="selectCategory('shopping')" id="cat-shopping" class="cat-btn p-2.5 border rounded-xl flex flex-col items-center gap-1 text-[11px] font-semibold text-slate-600 hover:bg-slate-50">
                             <span class="text-lg">🛍️</span><span>Шопинг</span>
                         </button>
+                        <button onclick="selectCategory('coffee')" id="cat-coffee" class="cat-btn p-2.5 border rounded-xl flex flex-col items-center gap-1 text-[11px] font-semibold text-slate-600 hover:bg-slate-50">
+                            <span class="text-lg">☕</span><span>Кофейня</span>
+                        </button>
+                        <button onclick="selectCategory('other')" id="cat-other" class="cat-btn p-2.5 border rounded-xl flex flex-col items-center gap-1 text-[11px] font-semibold text-slate-600 hover:bg-slate-50 col-span-1">
+                            <span class="text-lg">🌀</span><span>Другое</span>
+                        </button>
                     </div>
                 </div>
 
@@ -303,6 +306,36 @@
 
                 <button onclick="saveNewEntry()" class="w-full bg-slate-950 hover:bg-slate-900 text-white font-semibold p-3.5 rounded-xl transition text-sm shadow-md">
                     Сохранить запись
+                </button>
+            </div>
+        </div>
+
+        <div id="settings-modal" class="absolute inset-0 bg-slate-900/50 backdrop-blur-sm z-50 flex items-end justify-center hidden" onclick="closeSettingsModalOnOuter(event)">
+            <div class="bg-white w-full rounded-t-3xl p-5 border-t border-slate-200 shadow-xl space-y-5 transform translate-y-0 transition-transform">
+                <div class="flex justify-between items-center">
+                    <h3 class="font-bold text-slate-900 text-base">Настройки профиля ⚙️</h3>
+                    <button onclick="closeSettingsModal()" class="text-slate-400 hover:text-slate-600 p-1"><i class="fa-solid fa-xmark text-lg"></i></button>
+                </div>
+                
+                <div class="space-y-1.5">
+                    <label class="block text-xs font-bold text-slate-400 uppercase tracking-wider">Финансовая цель месяца (₽)</label>
+                    <input type="number" id="settings-goal-input" placeholder="Например, 80000" class="w-full border border-slate-200 rounded-xl p-3 focus:outline-none focus:border-indigo-500 font-bold bg-slate-50 text-sm">
+                </div>
+
+                <div class="grid grid-cols-2 gap-3 pt-2 border-t border-slate-100">
+                    <button onclick="exportDataJSON()" class="p-3 bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold rounded-xl text-xs transition flex items-center justify-center gap-2">
+                        <i class="fa-solid fa-file-export text-slate-500"></i> Экспорт JSON
+                    </button>
+                    <div class="relative w-full">
+                        <input type="file" id="import-file-input" onchange="importDataJSON(event)" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer">
+                        <button class="w-full p-3 bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold rounded-xl text-xs transition flex items-center justify-center gap-2">
+                            <i class="fa-solid fa-file-import text-slate-500"></i> Импорт JSON
+                        </button>
+                    </div>
+                </div>
+
+                <button onclick="saveSettings()" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-semibold p-3.5 rounded-xl transition text-sm shadow-md">
+                    Применить изменения
                 </button>
             </div>
         </div>
@@ -419,6 +452,32 @@
             }
         }
 
+        function openSettingsModal() {
+            document.getElementById('settings-goal-input').value = appState.settings.monthlyGoal || 0;
+            document.getElementById('settings-modal').classList.remove('hidden');
+        }
+
+        function closeSettingsModal() {
+            document.getElementById('settings-modal').classList.add('hidden');
+        }
+
+        function closeSettingsModalOnOuter(e) {
+            if(e.target.id === 'settings-modal') closeSettingsModal();
+        }
+
+        function saveSettings() {
+            const newGoal = parseInt(document.getElementById('settings-goal-input').value);
+            if(isNaN(newGoal) || newGoal < 0) {
+                alert("Укажите корректную сумму цели!");
+                return;
+            }
+            appState.settings.monthlyGoal = newGoal;
+            saveToLocalStorage();
+            updateCalculations();
+            closeSettingsModal();
+            showToast("Настройки успешно сохранены");
+        }
+
         function updateCalculations() {
             const startLimit = new Date(document.getElementById('filter-date-start').value);
             const endLimit = new Date(document.getElementById('filter-date-end').value);
@@ -438,7 +497,7 @@
             });
 
             let totalExpense = 0;
-            let expGas = 0, expGroc = 0, expTools = 0, expCour = 0, expShop = 0;
+            let expGas = 0, expGroc = 0, expTools = 0, expCour = 0, expShop = 0, expCoffee = 0, expOther = 0;
 
             appState.expenses.forEach(item => {
                 const d = new Date(item.date);
@@ -449,6 +508,8 @@
                     if(item.category === 'tools') expTools += item.amount;
                     if(item.category === 'courses') expCour += item.amount;
                     if(item.category === 'shopping') expShop += item.amount;
+                    if(item.category === 'coffee') expCoffee += item.amount;
+                    if(item.category === 'other') expOther += item.amount;
                 }
             });
 
@@ -457,7 +518,7 @@
             document.getElementById('dash-inc-sum').textContent = `${totalIncome.toLocaleString()}`;
             document.getElementById('dash-exp-sum').textContent = `${totalExpense.toLocaleString()}`;
 
-            const goal = appState.settings.monthlyGoal;
+            const goal = appState.settings.monthlyGoal || 0;
             document.getElementById('dash-goal-text').textContent = `Цель: ${goal.toLocaleString()} ₽`;
             const percent = goal > 0 ? Math.min(Math.round((totalIncome / goal) * 100), 100) : 0;
             document.getElementById('dash-goal-progress').style.width = `${percent}%`;
@@ -477,12 +538,16 @@
             const p3 = totalExpense > 0 ? Math.round((expTools / totalExpense) * 100) : 0;
             const p4 = totalExpense > 0 ? Math.round((expCour / totalExpense) * 100) : 0;
             const p5 = totalExpense > 0 ? Math.round((expShop / totalExpense) * 100) : 0;
+            const p6 = totalExpense > 0 ? Math.round((expCoffee / totalExpense) * 100) : 0;
+            const p7 = totalExpense > 0 ? Math.round((expOther / totalExpense) * 100) : 0;
 
             document.getElementById('lbl-exp-1').textContent = `${p1}%`;
             document.getElementById('lbl-exp-2').textContent = `${p2}%`;
             document.getElementById('lbl-exp-3').textContent = `${p3}%`;
             document.getElementById('lbl-exp-4').textContent = `${p4}%`;
             document.getElementById('lbl-exp-5').textContent = `${p5}%`;
+            document.getElementById('lbl-exp-6').textContent = `${p6}%`;
+            document.getElementById('lbl-exp-7').textContent = `${p7}%`;
 
             if(totalExpense > 0) {
                 document.getElementById('chart-exp-1').setAttribute('stroke-dasharray', `${p1} 100`);
@@ -494,12 +559,14 @@
                 document.getElementById('chart-exp-4').setAttribute('stroke-dashoffset', `-${p1+p2+p3}`);
                 document.getElementById('chart-exp-5').setAttribute('stroke-dasharray', `${p5} 100`);
                 document.getElementById('chart-exp-5').setAttribute('stroke-dashoffset', `-${p1+p2+p3+p4}`);
+                document.getElementById('chart-exp-6').setAttribute('stroke-dasharray', `${p6} 100`);
+                document.getElementById('chart-exp-6').setAttribute('stroke-dashoffset', `-${p1+p2+p3+p4+p5}`);
+                document.getElementById('chart-exp-7').setAttribute('stroke-dasharray', `${p7} 100`);
+                document.getElementById('chart-exp-7').setAttribute('stroke-dashoffset', `-${p1+p2+p3+p4+p5+p6}`);
             } else {
-                document.getElementById('chart-exp-1').setAttribute('stroke-dasharray', `0 100`);
-                document.getElementById('chart-exp-2').setAttribute('stroke-dasharray', `0 100`);
-                document.getElementById('chart-exp-3').setAttribute('stroke-dasharray', `0 100`);
-                document.getElementById('chart-exp-4').setAttribute('stroke-dasharray', `0 100`);
-                document.getElementById('chart-exp-5').setAttribute('stroke-dasharray', `0 100`);
+                for(let i=1; i<=7; i++) {
+                    document.getElementById(`chart-exp-${i}`).setAttribute('stroke-dasharray', `0 100`);
+                }
             }
         }
 
@@ -552,7 +619,7 @@
             container.innerHTML = '';
 
             let dayTotal = 0;
-            let gas = 0, groc = 0, tools = 0, cour = 0, shop = 0;
+            let gas = 0, groc = 0, tools = 0, cour = 0, shop = 0, coffee = 0, other = 0;
             const filtered = appState.expenses.filter(item => item.date === targetDate);
 
             const catMeta = {
@@ -560,7 +627,9 @@
                 groceries: { icon: '🛒', name: 'Продукты' },
                 tools: { icon: '✂️', name: 'Расходники (Парикмахер)' },
                 courses: { icon: '🎓', name: 'Обучение / Курсы' },
-                shopping: { icon: '🛍️', name: 'Шопинг / Одежда' }
+                shopping: { icon: '🛍️', name: 'Шопинг / Одежда' },
+                coffee: { icon: '☕', name: 'Кофейня' },
+                other: { icon: '🌀', name: 'Другое' }
             };
 
             if(filtered.length === 0) {
@@ -573,6 +642,8 @@
                     if(item.category === 'tools') tools += item.amount;
                     if(item.category === 'courses') cour += item.amount;
                     if(item.category === 'shopping') shop += item.amount;
+                    if(item.category === 'coffee') coffee += item.amount;
+                    if(item.category === 'other') other += item.amount;
 
                     const meta = catMeta[item.category] || { icon: '📉', name: 'Расход' };
 
@@ -601,6 +672,8 @@
             document.getElementById('exp-footer-tools').textContent = `${tools} ₽`;
             document.getElementById('exp-footer-courses').textContent = `${cour} ₽`;
             document.getElementById('exp-footer-shop').textContent = `${shop} ₽`;
+            document.getElementById('exp-footer-coffee').textContent = `${coffee} ₽`;
+            document.getElementById('exp-footer-other').textContent = `${other} ₽`;
         }
 
         function openEntryModal(type) {
@@ -703,9 +776,11 @@
                     const parsed = JSON.parse(e.target.result);
                     if (parsed.incomes && parsed.expenses) {
                         appState = parsed;
+                        if(!appState.settings) appState.settings = { monthlyGoal: 80000 };
                         saveToLocalStorage();
                         setInitialDates();
                         switchView('dashboard');
+                        closeSettingsModal();
                         showToast("Данные успешно восстановлены!");
                     } else {
                         alert("Ошибка: Файл имеет некорректную структуру.");
@@ -724,7 +799,10 @@
         function loadFromLocalStorage() {
             const stored = localStorage.getItem('phone_finance_data');
             if (stored) {
-                try { appState = JSON.parse(stored); } catch(e) { console.error(e); }
+                try { 
+                    appState = JSON.parse(stored); 
+                    if(!appState.settings) appState.settings = { monthlyGoal: 80000 };
+                } catch(e) { console.error(e); }
             }
         }
 
