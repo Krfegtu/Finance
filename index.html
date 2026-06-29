@@ -11,7 +11,7 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="ProTrack">
     
-    <link rel="apple-touch-icon" href="https://cdn-icons-png.flaticon.com/512/2377/2377846.png">
+    <link class="apple-touch-icon" rel="apple-touch-icon" href="https://cdn-icons-png.flaticon.com/512/2377/2377846.png">
 
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -31,7 +31,6 @@
         body {
             font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
             background-color: #f3f4f6;
-            /* Защита от случайных системных жестов смахивания на iOS */
             overscroll-behavior-y: contain; 
         }
         .custom-scrollbar::-webkit-scrollbar {
@@ -50,11 +49,11 @@
         }
     </style>
 </head>
-<body class="text-slate-800 min-h-screen flex flex-col antialiased bg-slate-900 sm:py-4">
+<body class="text-slate-800 min-h-screen flex flex-col antialiased bg-slate-900 overflow-x-hidden">
 
-    <div class="phone-container bg-slate-50 flex-1 flex flex-col w-full h-full bg-white">
+    <div class="phone-container bg-slate-50 flex-1 flex flex-col w-screen h-full bg-white max-w-full overflow-x-hidden">
         
-        <header class="bg-white/90 backdrop-blur-md border-b border-slate-100 sticky top-0 z-40 px-5 py-4 flex flex-col gap-3 shadow-sm sticky-header">
+        <header id="main-app-header" class="bg-white/90 backdrop-blur-md border-b border-slate-100 sticky top-0 z-40 px-5 py-4 flex flex-col gap-3 shadow-sm sticky-header">
             <div class="flex justify-between items-center">
                 <div class="flex items-center space-x-2.5 cursor-pointer" onclick="switchView('dashboard')">
                     <div class="w-7 h-7 bg-indigo-600 rounded-lg flex items-center justify-center text-white shadow-md">
@@ -130,8 +129,8 @@
                             <span class="absolute text-[11px] font-bold text-slate-700" id="dash-inc-sum">0</span>
                         </div>
                         <div class="text-[9px] text-slate-400 mt-2 flex flex-col gap-0.5 w-full">
-                            <div class="flex items-center justify-between"><span>✂️ Парикм.</span><span id="lbl-inc-hair">0%</span></div>
-                            <div class="flex items-center justify-between"><span>🔮 Таро</span><span id="lbl-inc-tarot">0%</span></div>
+                            <div class="flex items-center justify-between"><span><span class="text-emerald-500 mr-0.5">●</span> ✂️ Парикм.</span><span id="lbl-inc-hair">0%</span></div>
+                            <div class="flex items-center justify-between"><span><span class="text-purple-500 mr-0.5">●</span> 🔮 Таро</span><span id="lbl-inc-tarot">0%</span></div>
                         </div>
                     </div>
 
@@ -148,18 +147,13 @@
                             </svg>
                             <span class="absolute text-[11px] font-bold text-slate-700" id="dash-exp-sum">0</span>
                         </div>
-                        <span class="text-[8px] text-slate-400 text-center mt-2">⛽ 🛒 ✂️ 🎓 🛍️<br>Структура затрат</span>
-                    </div>
-                </div>
-
-                <div class="bg-gradient-to-r from-purple-500 to-indigo-600 rounded-xl p-4 text-white shadow-md flex justify-between items-center">
-                    <div>
-                        <span class="text-[10px] uppercase font-bold text-purple-200 block tracking-wider">Сводка по категории</span>
-                        <h4 class="text-lg font-bold">Консультации Таро 🔮</h4>
-                    </div>
-                    <div class="text-right">
-                        <span class="text-xl font-black" id="dash-tarot-summary">0 ₽</span>
-                        <span class="text-[9px] text-purple-200 block">в этом месяце</span>
+                        <div class="text-[9px] text-slate-400 mt-2 flex flex-col gap-0.5 w-full">
+                            <div class="flex items-center justify-between"><span><span class="text-rose-500 mr-0.5">●</span> ⛽ Заправка</span><span id="lbl-exp-1">0%</span></div>
+                            <div class="flex items-center justify-between"><span><span class="text-amber-500 mr-0.5">●</span> 🛒 Продукты</span><span id="lbl-exp-2">0%</span></div>
+                            <div class="flex items-center justify-between"><span><span class="text-blue-500 mr-0.5">●</span> ✂️ Расходн.</span><span id="lbl-exp-3">0%</span></div>
+                            <div class="flex items-center justify-between"><span><span class="text-pink-500 mr-0.5">●</span> 🎓 Курсы</span><span id="lbl-exp-4">0%</span></div>
+                            <div class="flex items-center justify-between"><span><span class="text-indigo-500 mr-0.5">●</span> 🛍️ Шопинг</span><span id="lbl-exp-5">0%</span></div>
+                        </div>
                     </div>
                 </div>
 
@@ -186,14 +180,17 @@
                     <button onclick="switchView('dashboard')" class="text-xs font-semibold text-slate-400 hover:text-slate-800 flex items-center space-x-1">
                         <i class="fa-solid fa-chevron-left text-[10px]"></i> <span>На главную</span>
                     </button>
-                    <h2 class="font-bold text-base text-slate-900">Книга Доходов 🟩</h2>
+                    <h2 class="font-bold text-base text-slate-900">Книга Доходов 💰</h2>
                 </div>
 
                 <div class="bg-white rounded-2xl border border-slate-100 shadow-sm flex flex-col min-h-[400px] relative overflow-hidden">
                     <div class="p-3 bg-slate-50 border-b border-slate-100 flex justify-between items-center">
                         <span class="text-xs font-bold text-slate-700" id="notebook-inc-date-label">Записи за период</span>
-                        <div class="flex items-center space-x-1">
+                        <div class="flex items-center space-x-1.5">
                             <input type="date" id="inc-specific-date" onchange="renderIncomesList()" class="text-xs bg-white border rounded p-1 font-medium focus:outline-none">
+                            <button onclick="setCurrentDateToSection('inc')" class="bg-indigo-50 text-indigo-600 border border-indigo-100 rounded p-1 text-xs hover:bg-indigo-100 transition flex items-center justify-center" title="Установить сегодняшний день">
+                                <i class="fa-solid fa-calendar-day"></i>
+                            </button>
                         </div>
                     </div>
 
@@ -222,13 +219,18 @@
                     <button onclick="switchView('dashboard')" class="text-xs font-semibold text-slate-400 hover:text-slate-800 flex items-center space-x-1">
                         <i class="fa-solid fa-chevron-left text-[10px]"></i> <span>На главную</span>
                     </button>
-                    <h2 class="font-bold text-base text-slate-900">Книга Расходов 🟥</h2>
+                    <h2 class="font-bold text-base text-slate-900">Книга Расходов 💸</h2>
                 </div>
 
                 <div class="bg-white rounded-2xl border border-slate-100 shadow-sm flex flex-col min-h-[400px] relative overflow-hidden">
                     <div class="p-3 bg-slate-50 border-b border-slate-100 flex justify-between items-center">
                         <span class="text-xs font-bold text-slate-700" id="notebook-exp-date-label">Записи за период</span>
-                        <input type="date" id="exp-specific-date" onchange="renderExpensesList()" class="text-xs bg-white border rounded p-1 font-medium focus:outline-none">
+                        <div class="flex items-center space-x-1.5">
+                            <input type="date" id="exp-specific-date" onchange="renderExpensesList()" class="text-xs bg-white border rounded p-1 font-medium focus:outline-none">
+                            <button onclick="setCurrentDateToSection('exp')" class="bg-indigo-50 text-indigo-600 border border-indigo-100 rounded p-1 text-xs hover:bg-indigo-100 transition flex items-center justify-center" title="Установить сегодняшний день">
+                                <i class="fa-solid fa-calendar-day"></i>
+                            </button>
+                        </div>
                     </div>
 
                     <div id="expenses-list-container" class="flex-1 p-3 divide-y divide-slate-100 space-y-2 overflow-y-auto max-h-[300px]">
@@ -309,21 +311,19 @@
     </div>
 
     <script>
-        // Инициализация структуры данных по аналогии с вашим таск-трекером
         let appState = {
             settings: {
                 monthlyGoal: 80000
             },
-            incomes: [],  // Массив объектов: { id, date, category, amount }
-            expenses: []  // Массив объектов: { id, date, category, amount }
+            incomes: [],  
+            expenses: []  
         };
 
         const monthNames = ["Январь", "Февраль", "Март", "Апрель", "Май", "Июнь", "Июль", "Август", "Сентябрь", "Октябрь", "Ноябрь", "Декабрь"];
         let currentYear = 2026;
-        let currentMonth = 5; // Июнь по умолчанию для 2026
+        let currentMonth = 5; 
 
-        // Параметры текущей создаваемой записи
-        let activeModalType = 'income'; // income или expense
+        let activeModalType = 'income'; 
         let selectedCategoryKey = '';
 
         window.addEventListener('DOMContentLoaded', () => {
@@ -342,6 +342,17 @@
             document.getElementById('exp-specific-date').value = formatDateISO(today);
             
             resetToCurrentMonth();
+        }
+
+        function setCurrentDateToSection(sectionPrefix) {
+            const today = new Date();
+            document.getElementById(`${sectionPrefix}-specific-date`).value = formatDateISO(today);
+            if (sectionPrefix === 'inc') {
+                renderIncomesList();
+            } else {
+                renderExpensesList();
+            }
+            showToast("Установлен текущий день");
         }
 
         function resetToCurrentMonth() {
@@ -392,25 +403,27 @@
 
         function switchView(viewName) {
             document.querySelectorAll('.app-view').forEach(el => el.classList.add('hidden'));
+            
             if(viewName === 'dashboard') {
                 document.getElementById('view-dashboard').classList.remove('hidden');
+                document.getElementById('main-app-header').classList.remove('hidden');
                 updateCalculations();
             } else if(viewName === 'incomes') {
                 document.getElementById('view-incomes').classList.remove('hidden');
+                document.getElementById('main-app-header').classList.add('hidden');
                 renderIncomesList();
             } else if(viewName === 'expenses') {
                 document.getElementById('view-expenses').classList.remove('hidden');
+                document.getElementById('main-app-header').classList.add('hidden');
                 renderExpensesList();
             }
         }
 
-        // РЕАКТИВНЫЙ ПЕРЕСЧЕТ СТАТИСТИКИ (Ваш базовый метод из трекера задач)
         function updateCalculations() {
             const startLimit = new Date(document.getElementById('filter-date-start').value);
             const endLimit = new Date(document.getElementById('filter-date-end').value);
             endLimit.setHours(23,59,59,999);
 
-            // Фильтрация доходов по диапазону дат
             let totalIncome = 0;
             let incHair = 0;
             let incTarot = 0;
@@ -424,7 +437,6 @@
                 }
             });
 
-            // Фильтрация расходов по диапазону дат
             let totalExpense = 0;
             let expGas = 0, expGroc = 0, expTools = 0, expCour = 0, expShop = 0;
 
@@ -440,22 +452,16 @@
                 }
             });
 
-            // Наполнение Главной страницы (Dashboard)
             const balance = totalIncome - totalExpense;
             document.getElementById('dash-total-balance').textContent = `${balance.toLocaleString()} ₽`;
             document.getElementById('dash-inc-sum').textContent = `${totalIncome.toLocaleString()}`;
             document.getElementById('dash-exp-sum').textContent = `${totalExpense.toLocaleString()}`;
-            
-            // Сводка по Таро (Пункт 4)
-            document.getElementById('dash-tarot-summary').textContent = `${incTarot.toLocaleString()} ₽`;
 
-            // Прогресс финансовой цели
             const goal = appState.settings.monthlyGoal;
             document.getElementById('dash-goal-text').textContent = `Цель: ${goal.toLocaleString()} ₽`;
             const percent = goal > 0 ? Math.min(Math.round((totalIncome / goal) * 100), 100) : 0;
             document.getElementById('dash-goal-progress').style.width = `${percent}%`;
 
-            // Пересчет круговых диаграмм SVG (Доходы)
             const hairPercent = totalIncome > 0 ? Math.round((incHair / totalIncome) * 100) : 0;
             const tarotPercent = totalIncome > 0 ? Math.round((incTarot / totalIncome) * 100) : 0;
             
@@ -466,14 +472,19 @@
             document.getElementById('chart-inc-tarot').setAttribute('stroke-dasharray', `${tarotPercent} 100`);
             document.getElementById('chart-inc-tarot').setAttribute('stroke-dashoffset', `-${hairPercent}`);
 
-            // Пересчет круговых диаграмм SVG (Расходы)
-            if(totalExpense > 0) {
-                let p1 = (expGas/totalExpense)*100;
-                let p2 = (expGroc/totalExpense)*100;
-                let p3 = (expTools/totalExpense)*100;
-                let p4 = (expCour/totalExpense)*100;
-                let p5 = (expShop/totalExpense)*100;
+            const p1 = totalExpense > 0 ? Math.round((expGas / totalExpense) * 100) : 0;
+            const p2 = totalExpense > 0 ? Math.round((expGroc / totalExpense) * 100) : 0;
+            const p3 = totalExpense > 0 ? Math.round((expTools / totalExpense) * 100) : 0;
+            const p4 = totalExpense > 0 ? Math.round((expCour / totalExpense) * 100) : 0;
+            const p5 = totalExpense > 0 ? Math.round((expShop / totalExpense) * 100) : 0;
 
+            document.getElementById('lbl-exp-1').textContent = `${p1}%`;
+            document.getElementById('lbl-exp-2').textContent = `${p2}%`;
+            document.getElementById('lbl-exp-3').textContent = `${p3}%`;
+            document.getElementById('lbl-exp-4').textContent = `${p4}%`;
+            document.getElementById('lbl-exp-5').textContent = `${p5}%`;
+
+            if(totalExpense > 0) {
                 document.getElementById('chart-exp-1').setAttribute('stroke-dasharray', `${p1} 100`);
                 document.getElementById('chart-exp-2').setAttribute('stroke-dasharray', `${p2} 100`);
                 document.getElementById('chart-exp-2').setAttribute('stroke-dashoffset', `-${p1}`);
@@ -492,7 +503,6 @@
             }
         }
 
-        // ОТРИСОВКА КНИГИ ДОХОДОВ
         function renderIncomesList() {
             const targetDate = document.getElementById('inc-specific-date').value;
             const container = document.getElementById('incomes-list-container');
@@ -536,7 +546,6 @@
             document.getElementById('inc-footer-tarot').textContent = `${tarotSum} ₽`;
         }
 
-        // ОТРИСОВКА КНИГИ РАСХОДОВ
         function renderExpensesList() {
             const targetDate = document.getElementById('exp-specific-date').value;
             const container = document.getElementById('expenses-list-container');
@@ -594,7 +603,6 @@
             document.getElementById('exp-footer-shop').textContent = `${shop} ₽`;
         }
 
-        // ЛОГИКА РАБОТЫ МОДАЛЬНОГО ОКНА СОЗДАНИЯ ЗАПИСЕЙ
         function openEntryModal(type) {
             activeModalType = type;
             selectedCategoryKey = '';
@@ -674,7 +682,6 @@
             showToast("Запись удалена");
         }
 
-        // ВАШИ КЛАССИЧЕСКИЕ МЕТОДЫ ЭКСПОРТА И ИМПОРТА JSON БЭКАПА
         function exportDataJSON() {
             const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(appState, null, 2));
             const downloadAnchor = document.createElement('a');
@@ -710,7 +717,6 @@
             reader.readAsText(file);
         }
 
-        // ЛОКАЛЬНОЕ ХРАНИЛИЩЕ
         function saveToLocalStorage() {
             localStorage.setItem('phone_finance_data', JSON.stringify(appState));
         }
@@ -722,7 +728,6 @@
             }
         }
 
-        // ВСПОМОГАТЕЛЬНЫЕ ФУНКЦИИ
         function formatDateISO(dateObj) {
             const y = dateObj.getFullYear();
             const m = String(dateObj.getMonth() + 1).padStart(2, '0');
